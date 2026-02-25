@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+
+# macOS system files
+.DS_Store
+
+# Other common artifacts
+*.log
+*.lock
+*.tmp
+*.cache

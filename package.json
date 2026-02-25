@@ -1,0 +1,16 @@
+{
+  "name": "pranilstore",
+  "version": "1.0.0",
+  "description": "Pranil Sales and Marketing - Premium E-Commerce Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "serverless-http": "^3.2.0"
+  }
+}
