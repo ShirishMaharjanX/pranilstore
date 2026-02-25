@@ -71,7 +71,7 @@ function simpleHash(str) { let hash = 0; for (let i = 0; i < str.length; i++) { 
 
 app.get('/api/companies', (req, res) => res.json(readDB().companies.filter(c => c.isActive)));
 app.get('/api/companies/:id', (req, res) => { const c = readDB().companies.find(c => c.id === parseInt(req.params.id) && c.isActive); return c ? res.json(c) : res.status(404).json({ error: 'Not found' }); });
-app.post('/api/companies', (req, res) => { const db = readDB(); const { name, logo, bgColor } = req.body; const company = { id: Math.max(0, ...db.companies.map(c => c.id)) + 1, name, logo: logo || '🏪', bgColor: bgColor || '#000000', isActive: true }; db.companies.push(company); writeDB(db); res.status(201).json(company); });
+app.post('/api/companies', (req, res) => { const db = readDB(); const { name, logo, bgColor, image } = req.body; const company = { id: Math.max(0, ...db.companies.map(c => c.id)) + 1, name, logo: logo || '🏪', bgColor: bgColor || '#000000', image: image || '', isActive: true, headerImage: '' }; db.companies.push(company); writeDB(db); res.status(201).json(company); });
 app.patch('/api/companies/:id', (req, res) => { const db = readDB(); const idx = db.companies.findIndex(c => c.id === parseInt(req.params.id)); if (idx === -1) return res.status(404).json({ error: 'Not found' }); Object.assign(db.companies[idx], req.body); writeDB(db); res.json(db.companies[idx]); });
 app.delete('/api/companies/:id', (req, res) => { const db = readDB(); const idx = db.companies.findIndex(c => c.id === parseInt(req.params.id)); if (idx !== -1) { db.companies[idx].isActive = false; writeDB(db); } res.json({ success: true }); });
 
@@ -94,7 +94,19 @@ app.get('/api/stats/customer/:customerId', (req, res) => { const orders = readDB
 app.post('/api/orders', (req, res) => { const db = readDB(); const { customerId, customer, items, total } = req.body; const order = { id: `ORD-${Date.now()}`, customerId, customer, items, total, status: 'completed', createdAt: new Date().toISOString() }; db.orders.push(order); writeDB(db); res.json({ success: true, orderId: order.id }); });
 app.post('/api/print-order', (req, res) => res.json({ success: true }));
 
-app.use(express.static('frontend'));
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'frontend', 'index.html')));
+const frontendPath = path.join(__dirname, '..', 'frontend');
+app.use(express.static(frontendPath));
+app.get('*', (req, res) => res.sendFile(path.join(frontendPath, 'index.html')));
+
+const PORT = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`\n🚀 Pranil Store running at http://localhost:${PORT}`);
+        console.log('📦 Admin Password: admin123\n');
+    });
+}
+
 module.exports = app;
 module.exports.handler = serverless(app);
+
+

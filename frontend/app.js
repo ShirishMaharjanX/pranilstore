@@ -20,6 +20,7 @@ function handleSearch(event) {
 function clearSearch() { document.getElementById('searchInput').value = ''; document.getElementById('searchClear').style.display = 'none'; searchQuery = ''; renderCompanies(); }
 
 async function showSearchResults(query) {
+    await StorageManager.refreshData();
     const companies = await StorageManager.getCompanies();
     const results = [];
     companies.forEach(company => { company.products.forEach(product => { if (product.name.toLowerCase().includes(query) || company.name.toLowerCase().includes(query)) results.push({ ...product, company }); }); });
@@ -36,8 +37,7 @@ function renderSearchResults(results, query) {
         const card = document.createElement('div');
         card.className = 'product-card search-result-card';
         card.onclick = () => showProducts(product.company.id);
-        let stockClass = product.stock > 10 ? 'in-stock' : (product.stock > 0 ? 'low-stock' : 'out-of-stock');
-        card.innerHTML = `<div class="product-image"><span style="font-size:4rem;">${product.image || '📦'}</span></div><div class="product-details"><p class="product-company">${product.company.name}</p><h3>${product.name}</h3><div class="product-meta"><span class="price">NPR ${product.price.toLocaleString()}</span><span class="weight">${product.gram}</span></div><div class="stock-badge ${stockClass}">${stockClass === 'in-stock' ? 'In Stock' : stockClass === 'low-stock' ? 'Low Stock' : 'Out of Stock'}</div></div>`;
+        card.innerHTML = `<div class="product-image"><div class="product-placeholder">${product.image ? `<img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f5f5,#e5e5e5);color:#999;font-size:2rem;">Image</div>'}</div></div><div class="product-details"><p class="product-company">${product.company.name}</p><h3>${product.name}</h3><div class="product-meta"><span class="price">NPR ${product.price.toLocaleString()}</span><span class="weight">${product.gram}</span></div></div>`;
         grid.appendChild(card);
     });
 }
@@ -81,7 +81,8 @@ function renderCompanies(companies) {
         const card = document.createElement('div');
         card.className = 'company-card';
         card.style.animationDelay = `${index * 0.1}s`;
-        card.innerHTML = `<span style="font-size:4rem;">${company.logo}</span><h3>${company.name}</h3><p>${company.products.length} Products</p>`;
+        const logoDisplay = company.logo ? (company.image ? `<img src="${company.image}" alt="${company.name}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;">` : `<div style="width:120px;height:120px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,${company.bgColor},${company.bgColor}dd);border-radius:12px;font-size:3.5rem;">${company.logo}</div>`) : `<div style="width:120px;height:120px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;color:white;font-weight:bold;">Logo</div>`;
+        card.innerHTML = `<div style="margin-bottom:1rem;">${logoDisplay}</div><h3>${company.name}</h3><p>${company.products.length} Products</p>`;
         card.addEventListener('click', () => showProducts(company.id));
         grid.appendChild(card);
     });
@@ -97,15 +98,41 @@ async function showProducts(companyId) {
     document.getElementById('productsHeader').style.background = `linear-gradient(135deg, ${company.bgColor}22, ${company.bgColor}11)`;
     document.getElementById('companyInfoHeader').innerHTML = `<h2>${company.name}</h2>`;
     const bgEl = document.getElementById('productsBg');
-    if (bgEl) { bgEl.style.backgroundImage = company.headerImage ? `url('${company.headerImage}')` : ''; requestAnimationFrame(() => { bgEl.style.opacity = '1'; }); }
+    if (bgEl) { 
+        if (company.image) {
+            bgEl.style.backgroundImage = `url('${company.image}')`;
+            bgEl.style.backgroundSize = 'cover';
+            bgEl.style.backgroundPosition = 'center';
+            bgEl.style.filter = 'blur(8px)';
+        } else if (company.headerImage) {
+            bgEl.style.backgroundImage = `url('${company.headerImage}')`;
+            bgEl.style.filter = 'none';
+        } else {
+            bgEl.style.backgroundImage = `linear-gradient(135deg, ${company.bgColor}, ${company.bgColor}dd)`;
+            bgEl.style.backgroundSize = 'cover';
+        }
+        requestAnimationFrame(() => { bgEl.style.opacity = '1'; }); 
+    }
     const grid = document.getElementById('productsGrid');
     grid.innerHTML = '';
     if (products.length === 0) { grid.innerHTML = '<div class="empty-state"><h3>No products in this company</h3></div>'; return; }
     products.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
-        let stockClass = product.stock > 10 ? 'in-stock' : (product.stock > 0 ? 'low-stock' : 'out-of-stock');
-        card.innerHTML = `<div class="product-image"><span style="font-size:4rem;">${product.image || '📦'}</span></div><div class="product-details"><h3>${product.name}</h3><div class="product-meta"><span class="price">NPR ${product.price.toLocaleString()}</span><span class="weight">${product.gram}</span></div><div class="stock-badge ${stockClass}">${stockClass === 'in-stock' ? `In Stock (${product.stock})` : stockClass === 'low-stock' ? `Low Stock (${product.stock})` : 'Out of Stock'}</div><button class="add-to-cart-btn" ${product.stock === 0 ? 'disabled' : ''}>Add to Cart</button></div>`;
+        card.innerHTML = `<div class="product-image"><div class="product-placeholder">${product.image ? `<img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f5f5,#e5e5e5);color:#999;font-size:2rem;">Image</div>'}</div></div><div class="product-details"><h3>${product.name}</h3><div class="product-meta"><span class="price">NPR ${product.price.toLocaleString()}</span><span class="weight">${product.gram}</span></div><button class="add-to-cart-btn" ${product.stock === 0 ? 'disabled' : ''}>Add to Cart</button></div>`;
+        card.querySelector('.add-to-cart-btn').addEventListener('click', () => Cart.addToCart(product, company));
+        grid.appendChild(card);
+    });
+}
+
+function renderProducts(products, company) {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '';
+    if (!products || products.length === 0) { grid.innerHTML = '<div class="empty-state"><h3>No products in this company</h3></div>'; return; }
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `<div class="product-image"><div class="product-placeholder">${product.image ? `<img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f5f5,#e5e5e5);color:#999;font-size:2rem;">Image</div>'}</div></div><div class="product-details"><h3>${product.name}</h3><div class="product-meta"><span class="price">NPR ${product.price.toLocaleString()}</span><span class="weight">${product.gram}</span></div><button class="add-to-cart-btn" ${product.stock === 0 ? 'disabled' : ''}>Add to Cart</button></div>`;
         card.querySelector('.add-to-cart-btn').addEventListener('click', () => Cart.addToCart(product, company));
         grid.appendChild(card);
     });
