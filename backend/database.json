@@ -1,389 +1,520 @@
 {
+  "schemaVersion": 2,
+  "meta": {
+    "project": "Pranil Store",
+    "currency": "NPR",
+    "locale": "en-NP",
+    "timezone": "Asia/Kathmandu",
+    "updatedAt": "2026-03-04T00:00:00.000Z"
+  },
   "customers": [],
+  "customer_sessions": [],
+  "customer_audit_logs": [],
+  "password_reset_tokens": [],
   "orders": [],
   "order_items": [],
   "companies": [
     {
       "id": 1,
+      "code": "TECH",
       "name": "Tech Solutions",
       "logo": "",
-      "bgColor": "#667eea",
+      "bgColor": "#667EEA",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 2,
+      "code": "HOME",
       "name": "Home Essentials",
-      "logo": "🏠",
-      "bgColor": "#f093fb",
+      "logo": "",
+      "bgColor": "#F093FB",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 3,
+      "code": "FASH",
       "name": "Fashion Hub",
-      "logo": "👔",
-      "bgColor": "#4facfe",
+      "logo": "",
+      "bgColor": "#4FACFE",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 4,
+      "code": "BEAUTY",
       "name": "Beauty Care",
-      "logo": "💄",
-      "bgColor": "#43e97b",
+      "logo": "",
+      "bgColor": "#43E97B",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 5,
+      "code": "SPORT",
       "name": "Sports Gear",
-      "logo": "⚽",
-      "bgColor": "#fa709a",
+      "logo": "",
+      "bgColor": "#FA709A",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 6,
+      "code": "BOOKS",
       "name": "Books Corner",
-      "logo": "📚",
-      "bgColor": "#30cfd0",
+      "logo": "",
+      "bgColor": "#30CFD0",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 7,
+      "code": "PET",
       "name": "Pet Paradise",
-      "logo": "🐾",
-      "bgColor": "#a8edea",
+      "logo": "",
+      "bgColor": "#A8EDEA",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 8,
+      "code": "GARDEN",
       "name": "Garden Tools",
-      "logo": "🌱",
-      "bgColor": "#ff9a56",
+      "logo": "",
+      "bgColor": "#FF9A56",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 9,
+      "code": "BABY",
       "name": "Baby World",
-      "logo": "👶",
-      "bgColor": "#2e2e78",
+      "logo": "",
+      "bgColor": "#2E2E78",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 10,
+      "code": "OFFICE",
       "name": "Office Supplies",
-      "logo": "📎",
+      "logo": "",
       "bgColor": "#000000",
+      "headerImage": "",
       "isActive": true,
-      "headerImage": ""
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     }
   ],
   "products": [
     {
       "id": 101,
       "companyId": 1,
+      "sku": "TECH-101",
       "name": "Wireless Mouse",
       "price": 1299,
-      "gram": "120g",
+      "gram": "120 g",
       "stock": 50,
-      "image": "🖱️",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 102,
       "companyId": 1,
+      "sku": "TECH-102",
       "name": "Mechanical Keyboard",
       "price": 4999,
-      "gram": "980g",
+      "gram": "980 g",
       "stock": 30,
-      "image": "⌨️",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 103,
       "companyId": 1,
+      "sku": "TECH-103",
       "name": "USB Hub",
       "price": 899,
-      "gram": "85g",
+      "gram": "85 g",
       "stock": 100,
-      "image": "🔌",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 201,
       "companyId": 2,
+      "sku": "HOME-201",
       "name": "Kitchen Knife Set",
       "price": 2499,
-      "gram": "450g",
+      "gram": "450 g",
       "stock": 25,
-      "image": "🔪",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 202,
       "companyId": 2,
+      "sku": "HOME-202",
       "name": "Glass Storage Jars",
       "price": 799,
-      "gram": "1200g",
+      "gram": "1200 g",
       "stock": 60,
-      "image": "🫙",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 203,
       "companyId": 2,
+      "sku": "HOME-203",
       "name": "LED Bulbs Pack",
       "price": 599,
-      "gram": "240g",
+      "gram": "240 g",
       "stock": 150,
-      "image": "💡",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 301,
       "companyId": 3,
+      "sku": "FASH-301",
       "name": "Cotton T-Shirt",
       "price": 599,
-      "gram": "180g",
+      "gram": "180 g",
       "stock": 75,
-      "image": "👕",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 302,
       "companyId": 3,
+      "sku": "FASH-302",
       "name": "Denim Jeans",
       "price": 1999,
-      "gram": "550g",
+      "gram": "550 g",
       "stock": 40,
-      "image": "👖",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 303,
       "companyId": 3,
+      "sku": "FASH-303",
       "name": "Sneakers",
       "price": 2499,
-      "gram": "800g",
+      "gram": "800 g",
       "stock": 35,
-      "image": "👟",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 401,
       "companyId": 4,
+      "sku": "BEAUTY-401",
       "name": "Face Cream",
       "price": 899,
-      "gram": "50g",
+      "gram": "50 g",
       "stock": 80,
-      "image": "🧴",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 402,
       "companyId": 4,
+      "sku": "BEAUTY-402",
       "name": "Shampoo",
       "price": 449,
-      "gram": "200ml",
+      "gram": "200 ml",
       "stock": 100,
-      "image": "🧴",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 403,
       "companyId": 4,
+      "sku": "BEAUTY-403",
       "name": "Lipstick",
       "price": 599,
-      "gram": "4g",
+      "gram": "4 g",
       "stock": 60,
-      "image": "💄",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 501,
       "companyId": 5,
+      "sku": "SPORT-501",
       "name": "Yoga Mat",
       "price": 1299,
-      "gram": "1200g",
+      "gram": "1200 g",
       "stock": 45,
-      "image": "🧘",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 502,
       "companyId": 5,
+      "sku": "SPORT-502",
       "name": "Dumbbells Set",
       "price": 2999,
-      "gram": "5000g",
+      "gram": "5000 g",
       "stock": 20,
-      "image": "🏋️",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 503,
       "companyId": 5,
+      "sku": "SPORT-503",
       "name": "Resistance Bands",
       "price": 799,
-      "gram": "150g",
+      "gram": "150 g",
       "stock": 70,
-      "image": "🎽",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 601,
       "companyId": 6,
+      "sku": "BOOKS-601",
       "name": "Fiction Novel",
       "price": 399,
-      "gram": "350g",
+      "gram": "350 g",
       "stock": 90,
-      "image": "📖",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 602,
       "companyId": 6,
+      "sku": "BOOKS-602",
       "name": "Cookbook",
       "price": 699,
-      "gram": "600g",
+      "gram": "600 g",
       "stock": 50,
-      "image": "📕",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 603,
       "companyId": 6,
+      "sku": "BOOKS-603",
       "name": "Self-Help Guide",
       "price": 499,
-      "gram": "280g",
+      "gram": "280 g",
       "stock": 65,
-      "image": "📗",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 701,
       "companyId": 7,
+      "sku": "PET-701",
       "name": "Dog Food",
       "price": 1499,
-      "gram": "3000g",
+      "gram": "3000 g",
       "stock": 40,
-      "image": "🦴",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 702,
       "companyId": 7,
+      "sku": "PET-702",
       "name": "Cat Toy",
       "price": 299,
-      "gram": "50g",
+      "gram": "50 g",
       "stock": 85,
-      "image": "🐱",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 703,
       "companyId": 7,
+      "sku": "PET-703",
       "name": "Pet Bed",
       "price": 1999,
-      "gram": "1500g",
+      "gram": "1500 g",
       "stock": 25,
-      "image": "🛏️",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 801,
       "companyId": 8,
+      "sku": "GARDEN-801",
       "name": "Plant Seeds",
       "price": 199,
-      "gram": "20g",
+      "gram": "20 g",
       "stock": 150,
-      "image": "🌾",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 802,
       "companyId": 8,
+      "sku": "GARDEN-802",
       "name": "Watering Can",
       "price": 599,
-      "gram": "400g",
+      "gram": "400 g",
       "stock": 55,
-      "image": "💧",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 803,
       "companyId": 8,
+      "sku": "GARDEN-803",
       "name": "Garden Gloves",
       "price": 299,
-      "gram": "100g",
+      "gram": "100 g",
       "stock": 70,
-      "image": "🧤",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 901,
       "companyId": 9,
+      "sku": "BABY-901",
       "name": "Baby Bottle",
       "price": 399,
-      "gram": "150g",
+      "gram": "150 g",
       "stock": 80,
-      "image": "🍼",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 902,
       "companyId": 9,
+      "sku": "BABY-902",
       "name": "Diapers Pack",
       "price": 899,
-      "gram": "2000g",
+      "gram": "2000 g",
       "stock": 60,
-      "image": "🧷",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 903,
       "companyId": 9,
+      "sku": "BABY-903",
       "name": "Baby Wipes",
       "price": 249,
-      "gram": "500g",
+      "gram": "500 g",
       "stock": 100,
-      "image": "🧻",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 1001,
       "companyId": 10,
+      "sku": "OFFICE-1001",
       "name": "Notebook",
       "price": 149,
-      "gram": "200g",
+      "gram": "200 g",
       "stock": 120,
-      "image": "📓",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 1002,
       "companyId": 10,
+      "sku": "OFFICE-1002",
       "name": "Pen Set",
       "price": 299,
-      "gram": "80g",
+      "gram": "80 g",
       "stock": 90,
-      "image": "🖊️",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     },
     {
       "id": 1003,
       "companyId": 10,
+      "sku": "OFFICE-1003",
       "name": "Desk Organizer",
       "price": 799,
-      "gram": "600g",
+      "gram": "600 g",
       "stock": 45,
-      "image": "📋",
-      "isActive": true
+      "image": "",
+      "isActive": true,
+      "createdAt": "2026-03-04T00:00:00.000Z",
+      "updatedAt": "2026-03-04T00:00:00.000Z"
     }
   ]
 }

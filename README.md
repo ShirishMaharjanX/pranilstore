@@ -2,23 +2,23 @@
 
 A modern, professional e-commerce platform built with Node.js, Express, and vanilla JavaScript. Perfect for small to medium-sized businesses selling products online.
 
-## 🎯 Features
+## Features
 
-### 🛍️ Shopping Experience
+### Shopping Experience
 - **Multi-Company Support**: Browse products from multiple partner companies
 - **Search Functionality**: Real-time search across all products
 - **Product Details**: View detailed product information including price, weight, and stock status
 - **Shopping Cart**: Add/remove products and manage your orders
 - **Order Checkout**: Simple checkout process with customer information
 
-### 👤 User Management
+### User Management
 - **Customer Registration**: Create new customer accounts with validation
 - **Customer Login**: Secure login with password management
 - **Profile Management**: Update customer information anytime
 - **Order History**: View all previous orders and spending statistics
 - **Dashboard**: Personalized customer dashboard with statistics
 
-### 🔐 Admin Panel
+### Admin Panel
 - **Admin Access**: Secure admin panel with password protection
 - **Company Management**: Add, edit, and delete product categories (companies)
 - **Product Management**: Full CRUD operations for products
@@ -33,7 +33,7 @@ A modern, professional e-commerce platform built with Node.js, Express, and vani
   - Order statistics
   - Inventory alerts (low stock/out of stock)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 14+ installed
@@ -58,7 +58,7 @@ npm start
 
 The application will launch at `http://localhost:3000`
 
-## 📊 Admin Access
+## Admin Access
 
 **Admin Dashboard Password**: `admin123`
 
@@ -71,7 +71,7 @@ To access the admin panel:
    - Products management
    - Orders management
 
-## 🎨 User Interface
+## User Interface
 
 ### Main Pages
 - **Home**: Browse all companies and their products
@@ -86,7 +86,7 @@ To access the admin panel:
 - **Real-time Notifications**: Toast notifications for user actions
 - **Smooth Animations**: Polished user experience with transitions
 
-## 💾 Data Storage
+## Data Storage
 
 The application uses a simple JSON file (`backend/database.json`) for data storage:
 - **Companies**: Partner company/category information
@@ -94,12 +94,15 @@ The application uses a simple JSON file (`backend/database.json`) for data stora
 - **Customers**: User account information
 - **Orders**: Complete order history with items and totals
 
-## 🏗️ Project Structure
+For cloud storage, you can configure MongoDB in the `.env` file.
+
+## Project Structure
 
 ```
 appstore2html/
 ├── backend/
 │   ├── server.js           # Express server and API routes
+│   ├── database.js         # Database module (MongoDB/JSON)
 │   └── database.json       # JSON database (auto-created)
 ├── frontend/
 │   ├── index.html          # Main HTML structure
@@ -111,12 +114,12 @@ appstore2html/
 │   ├── auth.js             # Authentication & user management
 │   ├── admin.js            # Admin panel functionality
 │   ├── sw.js               # Service Worker (PWA)
-│   ├── manifest.json       # PWA manifest
-│   └── storage.json        # Local storage cache
-└── package.json            # Project dependencies
+│   └── manifest.json       # PWA manifest
+├── package.json            # Project dependencies
+└── .env                    # Environment variables
 ```
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Companies
 - `GET /api/companies` - Get all active companies
@@ -148,28 +151,28 @@ appstore2html/
 ### Statistics
 - `GET /api/stats` - Get overall platform statistics
 
-## 🎓 Sample Data
+## Sample Data
 
 The database comes pre-populated with:
 - **10 Companies**: Tech Solutions, Home Essentials, Fashion Hub, Beauty Care, Sports Gear, Books Corner, Pet Paradise, Garden Tools, Baby World, Office Supplies
 - **30 Products**: 3 products per company with realistic pricing
 - **Inventory**: Varied stock levels to demonstrate low/out-of-stock features
 
-## 🔒 Security Features
+## Security Features
 
 - **Session-based Authentication**: Uses session storage for user sessions
 - **Admin Password Protection**: Admin panel requires password
 - **Password Hashing**: Simple hash algorithm for password storage (consider upgrading for production)
 - **Input Validation**: Client-side and server-side validation
 
-## 📱 Progressive Web App
+## Progressive Web App
 
 The application is PWA-ready with:
 - Service Worker for offline capability
 - Web manifest for installation
 - Progressive enhancement
 
-## 🎯 Customization
+## Customization
 
 ### Adding Your Company Logo
 Edit the `brand-icon` SVG in `index.html` or replace with your own
@@ -187,7 +190,7 @@ Edit product stock status logic in `app.js`:
 let stockClass = product.stock > 10 ? 'in-stock' : ...
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Port Already in Use
 If port 3000 is occupied:
@@ -201,7 +204,7 @@ Delete `backend/database.json` to reset the database with sample data
 ### Service Worker Issues
 Clear browser cache and reload the application
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 Potential features to add:
 - Multiple payment gateway integration
@@ -213,16 +216,16 @@ Potential features to add:
 - Multi-language support
 - International shipping
 
-## 📄 License
+## License
 
 This project is provided as-is for commercial use.
 
-## 🤝 Support
+## Support
 
 For issues or feature requests, please refer to the code documentation and inline comments.
 
 ---
 
-**Built with ❤️ for Pranil Sales & Marketing**
+Built for Pranil Sales & Marketing
 
 Version 1.0.0 | Created: 2026

@@ -4,13 +4,19 @@
   "description": "Pranil Sales and Marketing - Premium E-Commerce Platform",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "node backend/server.js"
+    "start": "node scripts/auto-start.js",
+    "start:server": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "start:auto": "powershell -ExecutionPolicy Bypass -File scripts/start-backend.ps1",
+    "start:all": "node scripts/auto-start.js",
+    "setup": "node scripts/auto-start.js --setup-only"
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "body-parser": "^1.20.2",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "mongodb": "^6.3.0",
+    "dotenv": "^16.3.1"
   }
 }
