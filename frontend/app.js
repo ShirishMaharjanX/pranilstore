@@ -3,6 +3,7 @@ let currentCompanyId = null;
 let allCompanies = [];
 let searchQuery = '';
 let scrollRevealObserver = null;
+let currentFilters = { companyId: null, minPrice: null, maxPrice: null, inStock: false };
 
 function escapeHtml(value) {
     return String(value ?? '')
@@ -324,3 +325,184 @@ async function showProducts(companyId) {
 
     refreshScrollRevealTargets();
 }
+
+// ==================== FILTERS ====================
+function toggleFilters() {
+    const panel = document.getElementById('filterPanel');
+    panel.classList.toggle('active');
+}
+
+async function initFilters() {
+    const companies = await StorageManager.getCompanies();
+    const select = document.getElementById('filterCompany');
+    companies.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c.id;
+        option.textContent = c.name;
+        select.appendChild(option);
+    });
+}
+
+async function applyFilters() {
+    const companyId = document.getElementById('filterCompany').value;
+    const minPrice = document.getElementById('filterMinPrice').value;
+    const maxPrice = document.getElementById('filterMaxPrice').value;
+    const inStock = document.getElementById('filterInStock').checked;
+    
+    currentFilters = {
+        companyId: companyId ? parseInt(companyId) : null,
+        minPrice: minPrice ? parseFloat(minPrice) : null,
+        maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+        inStock: inStock
+    };
+    
+    await performFilteredSearch();
+}
+
+async function performFilteredSearch() {
+    const params = new URLSearchParams();
+    if (currentFilters.companyId) params.append('companyId', currentFilters.companyId);
+    if (currentFilters.minPrice) params.append('minPrice', currentFilters.minPrice);
+    if (currentFilters.maxPrice) params.append('maxPrice', currentFilters.maxPrice);
+    if (currentFilters.inStock) params.append('inStock', 'true');
+    if (searchQuery) params.append('q', searchQuery);
+    
+    try {
+        const results = await StorageManager.request('/api/search?' + params.toString());
+        renderFilteredProducts(results);
+    } catch (error) {
+        console.error('Filter error:', error);
+    }
+}
+
+function renderFilteredProducts(products) {
+    document.getElementById('companyView').style.display = 'block';
+    document.getElementById('productsView').style.display = 'none';
+    
+    const grid = document.getElementById('companiesGrid');
+    grid.innerHTML = `<div class="search-results-header"><h2>Search Results</h2><p>Found ${products.length} products</p></div>`;
+    
+    if (products.length === 0) {
+        grid.innerHTML += '<div class="empty-state"><p>No products found</p><button class="btn-primary" onclick="clearFilters()">Clear Filters</button></div>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productName = escapeHtml(product.name || 'Unnamed Product');
+        const productWeight = escapeHtml(product.gram || '');
+        const imageMarkup = renderImageMarkup(product.image, productName);
+        
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `<div class="product-image"><div class="product-placeholder">${imageMarkup}</div></div><div class="product-details"><h3>${productName}</h3><div class="product-meta"><span class="price">${formatNpr(product.price)}</span><span class="weight">${productWeight}</span></div><button class="add-to-cart-btn">Add to Cart</button></div>`;
+        card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+            if (product.company) {
+                Cart.addToCart(product, product.company);
+            }
+        });
+        grid.appendChild(card);
+    });
+    
+    refreshScrollRevealTargets();
+}
+
+function clearFilters() {
+    document.getElementById('filterCompany').value = '';
+    document.getElementById('filterMinPrice').value = '';
+    document.getElementById('filterMaxPrice').value = '';
+    document.getElementById('filterInStock').checked = false;
+    currentFilters = { companyId: null, minPrice: null, maxPrice: null, inStock: false };
+    searchQuery = '';
+    document.getElementById('searchInput').value = '';
+    showCompanies();
+    document.getElementById('filterPanel').classList.remove('active');
+}
+
+// ==================== REVIEWS ====================
+async function showProductReviews(productId) {
+    const section = document.getElementById('reviewsSection');
+    section.innerHTML = '<h3>Reviews</h3><div id="reviewsList" class="reviews-list"></div>';
+    
+    try {
+        const reviews = await StorageManager.request('/api/reviews?productId=' + productId);
+        renderReviews(reviews, productId);
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+    }
+}
+
+function renderReviews(reviews, productId) {
+    const list = document.getElementById('reviewsList');
+    
+    if (!reviews || reviews.length === 0) {
+        list.innerHTML = '<p class="empty-state">No reviews yet. Be the first to review!</p>';
+    }
+    
+    reviews.forEach(review => {
+        const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+        const date = new Date(review.createdAt).toLocaleDateString();
+        const item = document.createElement('div');
+        item.className = 'review-item';
+        item.innerHTML = `
+            <div class="review-header">
+                <span class="review-author">${escapeHtml(review.customerName)}</span>
+                <span class="review-rating">${stars}</span>
+            </div>
+            <p class="review-comment">${escapeHtml(review.comment)}</p>
+            <span class="review-date">${date}</span>
+        `;
+        list.appendChild(item);
+    });
+    
+    // Add review form
+    const form = document.createElement('div');
+    form.className = 'review-form';
+    form.innerHTML = `
+        <h4>Write a Review</h4>
+        <select id="reviewRating">
+            <option value="5">5 Stars - Excellent</option>
+            <option value="4">4 Stars - Very Good</option>
+            <option value="3">3 Stars - Good</option>
+            <option value="2">2 Stars - Fair</option>
+            <option value="1">1 Star - Poor</option>
+        </select>
+        <textarea id="reviewComment" placeholder="Share your experience with this product..."></textarea>
+        <button class="btn-primary" onclick="submitReview(${productId})">Submit Review</button>
+    `;
+    list.appendChild(form);
+}
+
+async function submitReview(productId) {
+    const rating = document.getElementById('reviewRating').value;
+    const comment = document.getElementById('reviewComment').value;
+    
+    if (!comment.trim()) {
+        showNotification('Please write a review', 'error');
+        return;
+    }
+    
+    const user = await StorageManager.getCurrentUser();
+    const reviewData = {
+        productId: productId,
+        rating: parseInt(rating),
+        comment: comment,
+        customerId: user ? user.customerId : null,
+        customerName: user ? user.name : 'Guest'
+    };
+    
+    try {
+        await StorageManager.request('/api/reviews', {
+            method: 'POST',
+            body: JSON.stringify(reviewData)
+        });
+        showNotification('Review submitted successfully!', 'success');
+        showProductReviews(productId);
+    } catch (error) {
+        showNotification('Failed to submit review', 'error');
+    }
+}
+
+// Initialize filters on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initFilters();
+});

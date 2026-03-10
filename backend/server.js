@@ -574,6 +574,99 @@ app.patch('/api/customer/:id/password', (req, res) => {
     res.json({ success: true });
 });
 
+// Reviews API
+app.get('/api/reviews', (req, res) => {
+    const db = readDB();
+    const productId = req.query.productId;
+    let reviews = db.reviews || [];
+    if (productId) {
+        reviews = reviews.filter(r => r.productId === parseInt(productId) && r.isActive);
+    }
+    res.json(reviews);
+});
+
+app.post('/api/reviews', (req, res) => {
+    const db = readDB();
+    const { productId, customerId, customerName, rating, comment } = req.body;
+    
+    if (!productId || !rating || !comment) {
+        return res.status(400).json({ error: 'Product ID, rating, and comment are required' });
+    }
+    
+    if (rating < 1 || rating > 5) {
+        return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+    
+    const review = {
+        id: `REV-${Date.now()}`,
+        productId: parseInt(productId),
+        customerId: customerId || null,
+        customerName: customerName || 'Anonymous',
+        rating: parseInt(rating),
+        comment: comment.trim().slice(0, 1000),
+        isActive: true,
+        createdAt: new Date().toISOString()
+    };
+    
+    if (!db.reviews) db.reviews = [];
+    db.reviews.push(review);
+    writeDB(db);
+    res.status(201).json(review);
+});
+
+app.delete('/api/reviews/:id', (req, res) => {
+    const db = readDB();
+    const idx = (db.reviews || []).findIndex(r => r.id === req.params.id);
+    if (idx !== -1) {
+        db.reviews[idx].isActive = false;
+        writeDB(db);
+    }
+    res.json({ success: true });
+});
+
+// Search with filters
+app.get('/api/search', (req, res) => {
+    const db = readDB();
+    const { q, companyId, minPrice, maxPrice, inStock } = req.query;
+    
+    let products = db.products.filter(p => p.isActive);
+    
+    // Filter by company
+    if (companyId) {
+        products = products.filter(p => p.companyId === parseInt(companyId));
+    }
+    
+    // Filter by price range
+    if (minPrice) {
+        products = products.filter(p => p.price >= parseFloat(minPrice));
+    }
+    if (maxPrice) {
+        products = products.filter(p => p.price <= parseFloat(maxPrice));
+    }
+    
+    // Filter by stock
+    if (inStock === 'true') {
+        products = products.filter(p => p.stock > 0);
+    }
+    
+    // Search by name
+    if (q && q.trim()) {
+        const search = q.toLowerCase().trim();
+        products = products.filter(p => 
+            p.name.toLowerCase().includes(search)
+        );
+    }
+    
+    // Get company info for each product
+    const companies = db.companies.filter(c => c.isActive);
+    const results = products.map(p => ({
+        ...p,
+        company: companies.find(c => c.id === p.companyId)
+    }));
+    
+    res.json(results);
+});
+
 app.get('/api/stats', (req, res) => { const db = readDB(); const revenue = db.orders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0); res.json({ companies: db.companies.filter(c => c.isActive).length, products: db.products.filter(p => p.isActive).length, orders: db.orders.length, revenue }); });
 app.get('/api/orders', (req, res) => res.json(readDB().orders));
 app.get('/api/orders/customer/:customerId', (req, res) => res.json(readDB().orders.filter(o => o.customerId === req.params.customerId)));

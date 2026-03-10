@@ -28,7 +28,8 @@
     <header class="header">
         <div class="header-content">
             <div class="brand" onclick="showCompanies()"><div class="brand-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="24" height="24" stroke="currentColor" stroke-width="2"/><line x1="4" y1="12" x2="28" y2="12" stroke="currentColor" stroke-width="2"/><line x1="12" y1="12" x2="12" y2="28" stroke="currentColor" stroke-width="2"/><line x1="20" y1="12" x2="20" y2="28" stroke="currentColor" stroke-width="2"/></svg></div><div class="brand-text"><span class="brand-name">Pranil</span><span class="brand-tagline">Premium Commerce</span></div></div>
-            <div class="search-container"><svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="searchInput" class="search-input" placeholder="Search products..." onkeyup="handleSearch(event)"><button class="search-clear" onclick="clearSearch()" style="display:none;" id="searchClear">×</button></div>
+            <div class="search-container"><svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="searchInput" class="search-input" placeholder="Search products..." onkeyup="handleSearch(event)"><button class="search-clear" onclick="clearSearch()" style="display:none;" id="searchClear">x</button></div>
+            <button class="filter-toggle-btn" onclick="toggleFilters()">Filters</button>
             <nav class="header-nav">
                 <div id="guestControls" class="nav-group"><button class="nav-btn nav-btn-secondary" onclick="CustomerAuth.showLoginModal()">Sign In</button><button class="nav-btn nav-btn-primary" onclick="CustomerAuth.showRegisterModal()">Register</button></div>
                 <div id="userControls" class="nav-group" style="display: none;"><button class="user-profile-btn" onclick="CustomerAuth.showDashboard()"><div class="user-avatar-small" id="userAvatar">U</div><span id="userName">User</span></button><button class="nav-btn nav-btn-secondary" onclick="CustomerAuth.logout()">Sign Out</button></div>
@@ -38,8 +39,32 @@
         </div>
     </header>
     <main class="main-content">
+        <div id="filterPanel" class="filter-panel">
+            <h3>Filters</h3>
+            <div class="filter-group">
+                <label>Category</label>
+                <select id="filterCompany" onchange="applyFilters()">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Min Price (NPR)</label>
+                <input type="number" id="filterMinPrice" placeholder="0" onchange="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Max Price (NPR)</label>
+                <input type="number" id="filterMaxPrice" placeholder="Any" onchange="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="filterInStock" onchange="applyFilters()">
+                    <span>In Stock Only</span>
+                </label>
+            </div>
+            <button class="btn-secondary" onclick="clearFilters()">Clear Filters</button>
+        </div>
         <section id="companyView" class="company-view"><div class="page-header"><h1 class="page-title">Our Partners</h1><p class="page-subtitle">Discover premium products from trusted brands</p></div><div class="companies-grid" id="companiesGrid"></div></section>
-        <section id="productsView" class="products-view"><div cljass="products-header" id="productsHeader"><div class="products-bg" id="productsBg"></div><button class="back-button" onclick="showCompanies()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10H5M5 10L10 5M5 10L10 15"/></svg>Back to Partners</button><div class="company-info-header" id="companyInfoHeader"></div></div><div class="products-grid" id="productsGrid"></div></section>
+        <section id="productsView" class="products-view"><div cljass="products-header" id="productsHeader"><div class="products-bg" id="productsBg"></div><button class="back-button" onclick="showCompanies()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10H5M5 10L10 5M5 10L10 15"/></svg>Back to Partners</button><div class="company-info-header" id="companyInfoHeader"></div></div><div class="products-grid" id="productsGrid"></div><div id="reviewsSection" class="reviews-section"></div></section>
     </main>
     <aside id="checkoutSidebar" class="checkout-sidebar">
         <div class="checkout-header"><h3>Shopping Cart</h3><button class="close-sidebar-btn" onclick="Cart.toggleCart()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
