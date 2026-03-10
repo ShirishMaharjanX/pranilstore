@@ -249,20 +249,98 @@ function renderCompanies(companies = allCompanies) {
         const card = document.createElement('div');
         card.className = 'company-card';
         card.style.animationDelay = `${index * 0.1}s`;
+        
+        // Background image for 3D effect
+        let bgStyle = '';
+        if (isSafeImageSource(company.image)) {
+            bgStyle = `background-image: url("${escapeHtml(company.image)}"); background-size: cover; background-position: center;`;
+        } else if (company.headerImage) {
+            bgStyle = `background-image: url("${escapeHtml(company.headerImage)}"); background-size: cover; background-position: center;`;
+        }
 
         let logoDisplay = '<div style="width:120px;height:120px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:12px;color:white;font-weight:bold;">Logo</div>';
         if (isSafeImageSource(company.image)) {
-            logoDisplay = `<img src="${escapeHtml(company.image)}" alt="${companyName}" style="width:120px;height:120px;object-fit:cover;border-radius:12px;">`;
+            logoDisplay = `<img src="${escapeHtml(company.image)}" alt="${companyName}" style="width:120px;height:120px;object-fit:cover;border-radius:12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">`;
         } else if (company.logo) {
             logoDisplay = `<div style="width:120px;height:120px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,${companyColor},${companyColor}dd);border-radius:12px;font-size:3.5rem;">${companyLogo}</div>`;
         }
 
-        card.innerHTML = `<div style="margin-bottom:1rem;">${logoDisplay}</div><h3>${companyName}</h3><p>${(company.products || []).length} Products</p>`;
+        card.innerHTML = `
+            <div class="company-card-bg" style="${bgStyle}"></div>
+            <div class="company-card-content">
+                <div style="margin-bottom:1rem; position: relative; z-index: 2;">${logoDisplay}</div>
+                <h3>${companyName}</h3>
+                <p>${(company.products || []).length} Products</p>
+            </div>`;
+        
+        // Add 3D tilt effect
+        card.addEventListener('mousemove', (e) => handle3DTilt(e, card));
+        card.addEventListener('mouseleave', () => reset3DTilt(card));
         card.addEventListener('click', () => showProducts(company.id));
         grid.appendChild(card);
     });
 
     refreshScrollRevealTargets();
+}
+
+// 3D Tilt Effect
+function handle3DTilt(e, card) {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 10;
+    const rotateY = (centerX - x) / 10;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    card.style.zIndex = '10';
+    
+    const bg = card.querySelector('.company-card-bg');
+    if (bg) {
+        bg.style.opacity = '0.3';
+        bg.style.transform = 'scale(1.2)';
+    }
+}
+
+function reset3DTilt(card) {
+    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    card.style.zIndex = '1';
+    
+    const bg = card.querySelector('.company-card-bg');
+    if (bg) {
+        bg.style.opacity = '0';
+        bg.style.transform = 'scale(1)';
+    }
+}
+
+// Product 3D Tilt Effect
+function handleProduct3DTilt(e, card) {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 15;
+    const rotateY = (centerX - x) / 15;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+    card.style.zIndex = '10';
+    
+    const bg = card.querySelector('.product-card-bg');
+    if (bg) {
+        bg.style.opacity = '0.25';
+    }
+}
+
+function resetProduct3DTilt(card) {
+    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    card.style.zIndex = '1';
+    
+    const bg = card.querySelector('.product-card-bg');
+    if (bg) {
+        bg.style.opacity = '0';
+    }
 }
 
 async function showProducts(companyId) {
@@ -318,7 +396,25 @@ async function showProducts(companyId) {
 
         const card = document.createElement('div');
         card.className = 'product-card';
-        card.innerHTML = `<div class="product-image"><div class="product-placeholder">${imageMarkup}</div></div><div class="product-details"><h3>${productName}</h3><div class="product-meta"><span class="price">${formatNpr(product.price)}</span><span class="weight">${productWeight}</span></div><button class="add-to-cart-btn">Add to Cart</button></div>`;
+        
+        // Product background image for 3D effect
+        let bgStyle = '';
+        if (isSafeImageSource(product.image)) {
+            bgStyle = `background-image: url("${escapeHtml(product.image)}"); background-size: cover; background-position: center;`;
+        }
+        
+        card.innerHTML = `
+            <div class="product-card-bg" style="${bgStyle}"></div>
+            <div class="product-image"><div class="product-placeholder">${imageMarkup}</div></div>
+            <div class="product-details">
+                <h3>${productName}</h3>
+                <div class="product-meta"><span class="price">${formatNpr(product.price)}</span><span class="weight">${productWeight}</span></div>
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>`;
+        
+        // Add 3D tilt effect
+        card.addEventListener('mousemove', (e) => handleProduct3DTilt(e, card));
+        card.addEventListener('mouseleave', () => resetProduct3DTilt(card));
         card.querySelector('.add-to-cart-btn').addEventListener('click', () => Cart.addToCart(product, company));
         grid.appendChild(card);
     });
