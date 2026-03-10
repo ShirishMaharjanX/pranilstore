@@ -13,8 +13,8 @@ class Database {
 
     async connect(mongoUri) {
         if (!mongoUri) {
-            console.log('📦 Using JSON file storage');
-            console.log('   Set MONGODB_URI in .env for cloud database');
+            console.log('Using JSON file storage');
+            console.log('Set MONGODB_URI in .env for cloud database');
             return false;
         }
 
@@ -29,11 +29,11 @@ class Database {
             
             await this.initCollections();
             
-            console.log('🗄️  Connected to MongoDB');
+            console.log('Connected to MongoDB');
             this.useMongo = true;
             return true;
         } catch (error) {
-            console.log('📦 MongoDB unavailable, using JSON file storage');
+            console.log('MongoDB unavailable, using JSON file storage');
             this.useMongo = false;
             return false;
         }
@@ -90,16 +90,16 @@ class Database {
             orders: [],
             order_items: [],
             companies: [
-                { id: 1, name: "Tech Solutions", logo: "🔧", bgColor: "#667eea", isActive: true, headerImage: "" },
-                { id: 2, name: "Home Essentials", logo: "🏠", bgColor: "#f093fb", isActive: true, headerImage: "" },
-                { id: 3, name: "Fashion Hub", logo: "👔", bgColor: "#4facfe", isActive: true, headerImage: "" },
-                { id: 4, name: "Beauty Care", logo: "💄", bgColor: "#43e97b", isActive: true, headerImage: "" },
-                { id: 5, name: "Sports Gear", logo: "⚽", bgColor: "#fa709a", isActive: true, headerImage: "" },
-                { id: 6, name: "Books Corner", logo: "📚", bgColor: "#30cfd0", isActive: true, headerImage: "" },
-                { id: 7, name: "Pet Paradise", logo: "🐾", bgColor: "#a8edea", isActive: true, headerImage: "" },
-                { id: 8, name: "Garden Tools", logo: "🌱", bgColor: "#ff9a56", isActive: true, headerImage: "" },
-                { id: 9, name: "Baby World", logo: "👶", bgColor: "#2e2e78", isActive: true, headerImage: "" },
-                { id: 10, name: "Office Supplies", logo: "📎", bgColor: "#000000", isActive: true, headerImage: "" }
+                { id: 1, name: "Tech Solutions", logo: "", bgColor: "#667eea", isActive: true, headerImage: "" },
+                { id: 2, name: "Home Essentials", logo: "", bgColor: "#f093fb", isActive: true, headerImage: "" },
+                { id: 3, name: "Fashion Hub", logo: "", bgColor: "#4facfe", isActive: true, headerImage: "" },
+                { id: 4, name: "Beauty Care", logo: "", bgColor: "#43e97b", isActive: true, headerImage: "" },
+                { id: 5, name: "Sports Gear", logo: "", bgColor: "#fa709a", isActive: true, headerImage: "" },
+                { id: 6, name: "Books Corner", logo: "", bgColor: "#30cfd0", isActive: true, headerImage: "" },
+                { id: 7, name: "Pet Paradise", logo: "", bgColor: "#a8edea", isActive: true, headerImage: "" },
+                { id: 8, name: "Garden Tools", logo: "", bgColor: "#ff9a56", isActive: true, headerImage: "" },
+                { id: 9, name: "Baby World", logo: "", bgColor: "#2e2e78", isActive: true, headerImage: "" },
+                { id: 10, name: "Office Supplies", logo: "", bgColor: "#000000", isActive: true, headerImage: "" }
             ],
             products: [
                 { id: 101, companyId: 1, name: "Wireless Mouse", price: 1299, gram: "120g", stock: 50, image: "", isActive: true },

@@ -46,48 +46,48 @@ function initDB() {
             orders: [],
             order_items: [],
             companies: [
-                { id: 1, name: "Tech Solutions", logo: "🔧", bgColor: "#667eea", isActive: true, headerImage: "" },
-                { id: 2, name: "Home Essentials", logo: "🏠", bgColor: "#f093fb", isActive: true, headerImage: "" },
-                { id: 3, name: "Fashion Hub", logo: "👔", bgColor: "#4facfe", isActive: true, headerImage: "" },
-                { id: 4, name: "Beauty Care", logo: "💄", bgColor: "#43e97b", isActive: true, headerImage: "" },
-                { id: 5, name: "Sports Gear", logo: "⚽", bgColor: "#fa709a", isActive: true, headerImage: "" },
-                { id: 6, name: "Books Corner", logo: "📚", bgColor: "#30cfd0", isActive: true, headerImage: "" },
-                { id: 7, name: "Pet Paradise", logo: "🐾", bgColor: "#a8edea", isActive: true, headerImage: "" },
-                { id: 8, name: "Garden Tools", logo: "🌱", bgColor: "#ff9a56", isActive: true, headerImage: "" },
-                { id: 9, name: "Baby World", logo: "👶", bgColor: "#2e2e78", isActive: true, headerImage: "" },
-                { id: 10, name: "Office Supplies", logo: "📎", bgColor: "#000000", isActive: true, headerImage: "" }
+                { id: 1, name: "Tech Solutions", logo: "", bgColor: "#667eea", isActive: true, headerImage: "" },
+                { id: 2, name: "Home Essentials", logo: "", bgColor: "#f093fb", isActive: true, headerImage: "" },
+                { id: 3, name: "Fashion Hub", logo: "", bgColor: "#4facfe", isActive: true, headerImage: "" },
+                { id: 4, name: "Beauty Care", logo: "", bgColor: "#43e97b", isActive: true, headerImage: "" },
+                { id: 5, name: "Sports Gear", logo: "", bgColor: "#fa709a", isActive: true, headerImage: "" },
+                { id: 6, name: "Books Corner", logo: "", bgColor: "#30cfd0", isActive: true, headerImage: "" },
+                { id: 7, name: "Pet Paradise", logo: "", bgColor: "#a8edea", isActive: true, headerImage: "" },
+                { id: 8, name: "Garden Tools", logo: "", bgColor: "#ff9a56", isActive: true, headerImage: "" },
+                { id: 9, name: "Baby World", logo: "", bgColor: "#2e2e78", isActive: true, headerImage: "" },
+                { id: 10, name: "Office Supplies", logo: "", bgColor: "#000000", isActive: true, headerImage: "" }
             ],
             products: [
-                { id: 101, companyId: 1, name: "Wireless Mouse", price: 1299, gram: "120g", stock: 50, image: "🖱️", isActive: true },
-                { id: 102, companyId: 1, name: "Mechanical Keyboard", price: 4999, gram: "980g", stock: 30, image: "⌨️", isActive: true },
-                { id: 103, companyId: 1, name: "USB Hub", price: 899, gram: "85g", stock: 100, image: "🔌", isActive: true },
-                { id: 201, companyId: 2, name: "Kitchen Knife Set", price: 2499, gram: "450g", stock: 25, image: "🔪", isActive: true },
-                { id: 202, companyId: 2, name: "Glass Storage Jars", price: 799, gram: "1200g", stock: 60, image: "🫙", isActive: true },
-                { id: 203, companyId: 2, name: "LED Bulbs Pack", price: 599, gram: "240g", stock: 150, image: "💡", isActive: true },
-                { id: 301, companyId: 3, name: "Cotton T-Shirt", price: 599, gram: "180g", stock: 75, image: "👕", isActive: true },
-                { id: 302, companyId: 3, name: "Denim Jeans", price: 1999, gram: "550g", stock: 40, image: "👖", isActive: true },
-                { id: 303, companyId: 3, name: "Sneakers", price: 2499, gram: "800g", stock: 35, image: "👟", isActive: true },
-                { id: 401, companyId: 4, name: "Face Cream", price: 899, gram: "50g", stock: 80, image: "🧴", isActive: true },
-                { id: 402, companyId: 4, name: "Shampoo", price: 449, gram: "200ml", stock: 100, image: "🧴", isActive: true },
-                { id: 403, companyId: 4, name: "Lipstick", price: 599, gram: "4g", stock: 60, image: "💄", isActive: true },
-                { id: 501, companyId: 5, name: "Yoga Mat", price: 1299, gram: "1200g", stock: 45, image: "🧘", isActive: true },
-                { id: 502, companyId: 5, name: "Dumbbells Set", price: 2999, gram: "5000g", stock: 20, image: "🏋️", isActive: true },
-                { id: 503, companyId: 5, name: "Resistance Bands", price: 799, gram: "150g", stock: 70, image: "🎽", isActive: true },
-                { id: 601, companyId: 6, name: "Fiction Novel", price: 399, gram: "350g", stock: 90, image: "📖", isActive: true },
-                { id: 602, companyId: 6, name: "Cookbook", price: 699, gram: "600g", stock: 50, image: "📕", isActive: true },
-                { id: 603, companyId: 6, name: "Self-Help Guide", price: 499, gram: "280g", stock: 65, image: "📗", isActive: true },
-                { id: 701, companyId: 7, name: "Dog Food", price: 1499, gram: "3000g", stock: 40, image: "🦴", isActive: true },
-                { id: 702, companyId: 7, name: "Cat Toy", price: 299, gram: "50g", stock: 85, image: "🐱", isActive: true },
-                { id: 703, companyId: 7, name: "Pet Bed", price: 1999, gram: "1500g", stock: 25, image: "🛏️", isActive: true },
-                { id: 801, companyId: 8, name: "Plant Seeds", price: 199, gram: "20g", stock: 150, image: "🌾", isActive: true },
-                { id: 802, companyId: 8, name: "Watering Can", price: 599, gram: "400g", stock: 55, image: "💧", isActive: true },
-                { id: 803, companyId: 8, name: "Garden Gloves", price: 299, gram: "100g", stock: 70, image: "🧤", isActive: true },
-                { id: 901, companyId: 9, name: "Baby Bottle", price: 399, gram: "150g", stock: 80, image: "🍼", isActive: true },
-                { id: 902, companyId: 9, name: "Diapers Pack", price: 899, gram: "2000g", stock: 60, image: "🧷", isActive: true },
-                { id: 903, companyId: 9, name: "Baby Wipes", price: 249, gram: "500g", stock: 100, image: "🧻", isActive: true },
-                { id: 1001, companyId: 10, name: "Notebook", price: 149, gram: "200g", stock: 120, image: "📓", isActive: true },
-                { id: 1002, companyId: 10, name: "Pen Set", price: 299, gram: "80g", stock: 90, image: "🖊️", isActive: true },
-                { id: 1003, companyId: 10, name: "Desk Organizer", price: 799, gram: "600g", stock: 45, image: "📋", isActive: true }
+                { id: 101, companyId: 1, name: "Wireless Mouse", price: 1299, gram: "120g", stock: 50, image: "", isActive: true },
+                { id: 102, companyId: 1, name: "Mechanical Keyboard", price: 4999, gram: "980g", stock: 30, image: "", isActive: true },
+                { id: 103, companyId: 1, name: "USB Hub", price: 899, gram: "85g", stock: 100, image: "", isActive: true },
+                { id: 201, companyId: 2, name: "Kitchen Knife Set", price: 2499, gram: "450g", stock: 25, image: "", isActive: true },
+                { id: 202, companyId: 2, name: "Glass Storage Jars", price: 799, gram: "1200g", stock: 60, image: "", isActive: true },
+                { id: 203, companyId: 2, name: "LED Bulbs Pack", price: 599, gram: "240g", stock: 150, image: "", isActive: true },
+                { id: 301, companyId: 3, name: "Cotton T-Shirt", price: 599, gram: "180g", stock: 75, image: "", isActive: true },
+                { id: 302, companyId: 3, name: "Denim Jeans", price: 1999, gram: "550g", stock: 40, image: "", isActive: true },
+                { id: 303, companyId: 3, name: "Sneakers", price: 2499, gram: "800g", stock: 35, image: "", isActive: true },
+                { id: 401, companyId: 4, name: "Face Cream", price: 899, gram: "50g", stock: 80, image: "", isActive: true },
+                { id: 402, companyId: 4, name: "Shampoo", price: 449, gram: "200ml", stock: 100, image: "", isActive: true },
+                { id: 403, companyId: 4, name: "Lipstick", price: 599, gram: "4g", stock: 60, image: "", isActive: true },
+                { id: 501, companyId: 5, name: "Yoga Mat", price: 1299, gram: "1200g", stock: 45, image: "", isActive: true },
+                { id: 502, companyId: 5, name: "Dumbbells Set", price: 2999, gram: "5000g", stock: 20, image: "", isActive: true },
+                { id: 503, companyId: 5, name: "Resistance Bands", price: 799, gram: "150g", stock: 70, image: "", isActive: true },
+                { id: 601, companyId: 6, name: "Fiction Novel", price: 399, gram: "350g", stock: 90, image: "", isActive: true },
+                { id: 602, companyId: 6, name: "Cookbook", price: 699, gram: "600g", stock: 50, image: "", isActive: true },
+                { id: 603, companyId: 6, name: "Self-Help Guide", price: 499, gram: "280g", stock: 65, image: "", isActive: true },
+                { id: 701, companyId: 7, name: "Dog Food", price: 1499, gram: "3000g", stock: 40, image: "", isActive: true },
+                { id: 702, companyId: 7, name: "Cat Toy", price: 299, gram: "50g", stock: 85, image: "", isActive: true },
+                { id: 703, companyId: 7, name: "Pet Bed", price: 1999, gram: "1500g", stock: 25, image: "", isActive: true },
+                { id: 801, companyId: 8, name: "Plant Seeds", price: 199, gram: "20g", stock: 150, image: "", isActive: true },
+                { id: 802, companyId: 8, name: "Watering Can", price: 599, gram: "400g", stock: 55, image: "", isActive: true },
+                { id: 803, companyId: 8, name: "Garden Gloves", price: 299, gram: "100g", stock: 70, image: "", isActive: true },
+                { id: 901, companyId: 9, name: "Baby Bottle", price: 399, gram: "150g", stock: 80, image: "", isActive: true },
+                { id: 902, companyId: 9, name: "Diapers Pack", price: 899, gram: "2000g", stock: 60, image: "", isActive: true },
+                { id: 903, companyId: 9, name: "Baby Wipes", price: 249, gram: "500g", stock: 100, image: "", isActive: true },
+                { id: 1001, companyId: 10, name: "Notebook", price: 149, gram: "200g", stock: 120, image: "", isActive: true },
+                { id: 1002, companyId: 10, name: "Pen Set", price: 299, gram: "80g", stock: 90, image: "", isActive: true },
+                { id: 1003, companyId: 10, name: "Desk Organizer", price: 799, gram: "600g", stock: 45, image: "", isActive: true }
             ]
         };
         fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
@@ -644,8 +644,8 @@ async function startServer() {
     
     if (require.main === module) {
         app.listen(PORT, () => {
-            console.log(`\n🏪 Pranil Store running at http://localhost:${PORT}`);
-            console.log('🔐 Admin password: admin123 (or set ADMIN_PASSWORD env var)\n');
+            console.log(`Pranil Store running at http://localhost:${PORT}`);
+            console.log('Admin password: admin123 (or set ADMIN_PASSWORD env var)');
         });
     }
 }
