@@ -60,7 +60,7 @@ The application will launch at `http://localhost:3000`
 
 ## Admin Access
 
-**Admin Dashboard Password**: `admin123`
+**Admin Dashboard Password**: `pranil_secure_2026_store` (change this in `.env` file)
 
 To access the admin panel:
 1. Click the "Admin" button in the header
@@ -188,6 +188,81 @@ Modify CSS variables in `style.css`:
 Edit product stock status logic in `app.js`:
 ```javascript
 let stockClass = product.stock > 10 ? 'in-stock' : ...
+```
+
+## Deployment to Your Own Domain (pranisstore.com)
+
+### Option 1: Google Cloud Run (Recommended - Free Tier)
+
+1. **Install Google Cloud CLI** from https://cloud.google.com/sdk/docs/install
+
+2. **Create Dockerfile** (already included in the project)
+
+3. **Build and Deploy:**
+```bash
+gcloud auth login
+gcloud run deploy pranilstore --source . --region=asia-south1 --allow-unauthenticated
+```
+
+4. **Connect Custom Domain:**
+   - Go to Cloud Run Console → Your Service → Manage Domain
+   - Add your domain (pranisstore.com)
+   - Follow DNS verification steps
+
+### Option 2: VPS/Server (DigitalOcean, AWS, etc.)
+
+1. **Upload files to your server**
+
+2. **Install dependencies:**
+```bash
+npm install
+```
+
+3. **Run with PM2 (for production):**
+```bash
+npm install -g pm2
+pm2 start backend/server.js --name "pranilstore"
+pm2 save
+pm2 startup
+```
+
+4. **Setup Nginx reverse proxy:**
+```nginx
+server {
+    listen 80;
+    server_name pranisstore.com www.pranisstore.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+5. **Add SSL (Let's Encrypt):**
+```bash
+sudo certbot --nginx -d pranisstore.com -d www.pranisstore.com
+```
+
+### Option 3: Google App Engine
+
+1. Create `app.yaml`:
+```yaml
+runtime: nodejs20
+env: standard
+instance_class: F2
+automatic_scaling:
+  min_instances: 1
+  max_instances: 2
+```
+
+2. Deploy:
+```bash
+gcloud app deploy
 ```
 
 ## Troubleshooting

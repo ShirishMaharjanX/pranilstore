@@ -182,15 +182,6 @@ function renderSearchResults(results, query) {
 
     refreshScrollRevealTargets();
 }
-
-function hideLoading() {
-    const loader = document.getElementById('loadingScreen');
-    loader.classList.add('hidden');
-    setTimeout(() => {
-        loader.style.display = 'none';
-    }, 500);
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await StorageManager.init();
@@ -203,8 +194,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Init error:', error);
         showNotification('Failed to load', 'error');
-    } finally {
-        hideLoading();
     }
 
     document.addEventListener('keydown', e => {
