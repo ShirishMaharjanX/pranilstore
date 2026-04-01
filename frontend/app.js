@@ -1,10 +1,30 @@
-// ==================== MAIN APPLICATION ====================
+/**
+ * Pranil Sales & Marketing - Main Application
+ * =============================================
+ * This is the core frontend application for the Pranil e-commerce platform.
+ * It handles company/product display, search, filtering, and user interactions.
+ * 
+ * Features:
+ * - Company listing with 3D card effects
+ * - Product browsing and filtering
+ * - Search functionality
+ * - Review system
+ * - Scroll reveal animations
+ * - Service worker registration
+ */
+
+// ==================== GLOBAL STATE ====================
 let currentCompanyId = null;
 let allCompanies = [];
 let searchQuery = '';
 let scrollRevealObserver = null;
 let currentFilters = { companyId: null, minPrice: null, maxPrice: null, inStock: false };
 
+/**
+ * Escapes HTML special characters to prevent XSS attacks
+ * @param {*} value - The value to escape
+ * @returns {string} - HTML-escaped string
+ */
 function escapeHtml(value) {
     return String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -14,11 +34,22 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
+/**
+ * Formats a numeric value as Nepali Rupees (NPR)
+ * @param {number|string} value - The value to format
+ * @returns {string} - Formatted currency string
+ */
 function formatNpr(value) {
     const numeric = Number(value) || 0;
     return `NPR ${numeric.toLocaleString()}`;
 }
 
+/**
+ * Validates if a string is a safe image source
+ * Accepts: data URIs, http/https URLs, relative paths, and common image extensions
+ * @param {string} value - The image source to validate
+ * @returns {boolean} - True if safe
+ */
 function isSafeImageSource(value) {
     const image = String(value || '').trim();
     if (!image) return false;
@@ -29,23 +60,37 @@ function isSafeImageSource(value) {
     return false;
 }
 
+/**
+ * Sanitizes a value for use in CSS background-image URLs
+ * Removes characters that could break CSS syntax
+ * @param {string} value - The value to sanitize
+ * @returns {string} - Sanitized CSS value
+ */
 function toSafeCssUrl(value) {
     return String(value || '').replace(/["'()\\\r\n]/g, '');
 }
 
+// Expose utility functions globally for use in HTML onclick handlers
 window.escapeHtml = escapeHtml;
 window.formatNpr = formatNpr;
 window.isSafeImageSource = isSafeImageSource;
 
+/**
+ * Initializes the IntersectionObserver for scroll reveal animations
+ * Respects user's motion preference settings
+ */
 function initScrollRevealObserver() {
+    // Prevent multiple observers
     if (scrollRevealObserver) {
         return;
     }
 
+    // Respect reduced motion preference for accessibility
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         return;
     }
 
+    // Create observer for elements entering the viewport
     scrollRevealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
@@ -60,11 +105,16 @@ function initScrollRevealObserver() {
     refreshScrollRevealTargets();
 }
 
+/**
+ * Finds and registers elements for scroll reveal animations
+ * Targets specific CSS classes used in the layout
+ */
 function refreshScrollRevealTargets() {
     if (!scrollRevealObserver) {
         return;
     }
 
+    // Query elements that should animate on scroll
     const targets = document.querySelectorAll(
         '.page-header, .company-card, .products-header, .product-card, .footer-column, .dashboard-card'
     );
@@ -75,14 +125,24 @@ function refreshScrollRevealTargets() {
             return;
         }
         target.classList.add('scroll-reveal');
+        // Add staggered animation delay based on order
         target.style.setProperty('--reveal-delay', `${Math.min(order * 50, 350)}ms`);
         scrollRevealObserver.observe(target);
         order += 1;
     });
 }
 
+// Expose for use by other modules
 window.refreshScrollRevealTargets = refreshScrollRevealTargets;
 
+/**
+ * Renders image markup with fallback for missing or invalid images
+ * @param {string} image - Image URL or data URI
+ * @param {string} altText - Alt text for the image
+ * @param {string} size - CSS size value
+ * @param {string} fontSize - Font size for placeholder
+ * @returns {string} - HTML markup for the image
+ */
 function renderImageMarkup(image, altText, size = '100%', fontSize = '2rem') {
     if (!image) {
         return '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f5f5,#e5e5e5);color:#999;font-size:2rem;">Image</div>';
@@ -92,10 +152,14 @@ function renderImageMarkup(image, altText, size = '100%', fontSize = '2rem') {
         return `<img src="${escapeHtml(image)}" alt="${escapeHtml(altText)}" style="width:${size};height:${size};object-fit:cover;">`;
     }
 
-    // Non-image values are intentionally hidden to keep visuals clean and emoji-free.
+    // Non-image values are intentionally hidden to keep visuals clean
     return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f5f5f5,#e5e5e5);color:#999;font-size:${fontSize};">Image</div>`;
 }
 
+/**
+ * Registers the service worker for PWA functionality
+ * Provides offline support and faster loading
+ */
 async function registerServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
     try {
@@ -105,6 +169,12 @@ async function registerServiceWorker() {
     }
 }
 
+// ==================== COMPANY VIEW ====================
+
+/**
+ * Displays the main companies view
+ * Loads all companies with their products and renders the grid
+ */
 async function showCompanies() {
     await StorageManager.refreshData();
     allCompanies = await StorageManager.getCompaniesWithProducts();
@@ -115,6 +185,11 @@ async function showCompanies() {
     refreshScrollRevealTargets();
 }
 
+/**
+ * Handles search input changes
+ * Triggers search after 2+ characters, returns to company view if cleared
+ * @param {Event} event - Input event from search field
+ */
 async function handleSearch(event) {
     const value = (event?.target?.value || '').toLowerCase();
     searchQuery = value;
@@ -130,6 +205,9 @@ async function handleSearch(event) {
     }
 }
 
+/**
+ * Clears the search input and returns to company view
+ */
 async function clearSearch() {
     document.getElementById('searchInput').value = '';
     document.getElementById('searchClear').style.display = 'none';
@@ -137,6 +215,11 @@ async function clearSearch() {
     await showCompanies();
 }
 
+/**
+ * Searches for products matching the query across all companies
+ * @param {string} query - Search term
+ * @returns {Array} - Array of matching products with company info
+ */
 async function showSearchResults(query) {
     await StorageManager.refreshData();
     const companies = await StorageManager.getCompanies();
@@ -155,6 +238,11 @@ async function showSearchResults(query) {
     renderSearchResults(results, query);
 }
 
+/**
+ * Renders search results in the company grid
+ * @param {Array} results - Search results array
+ * @param {string} query - Original search query
+ */
 function renderSearchResults(results, query) {
     document.getElementById('companyView').style.display = 'block';
     document.getElementById('productsView').style.display = 'none';
@@ -182,6 +270,13 @@ function renderSearchResults(results, query) {
 
     refreshScrollRevealTargets();
 }
+
+// ==================== APP INITIALIZATION ====================
+
+/**
+ * Main application initialization on DOM ready
+ * Sets up auth, admin status, service worker, and initial data
+ */
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await StorageManager.init();
@@ -196,8 +291,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         showNotification('Failed to load', 'error');
     }
 
+    // Global keyboard shortcuts
     document.addEventListener('keydown', e => {
         if (e.key !== 'Escape') return;
+        // Close all modals on Escape key
         document.getElementById('authModal').classList.remove('active');
         document.getElementById('customerDashboard').classList.remove('active');
         document.getElementById('editProfileModal').classList.remove('active');
@@ -206,6 +303,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+/**
+ * Shows a toast notification to the user
+ * @param {string} message - Message to display
+ * @param {string} type - Notification type: 'success' or 'error'
+ */
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -221,6 +323,12 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
+// ==================== COMPANY RENDERING ====================
+
+/**
+ * Renders the company cards grid
+ * @param {Array} companies - Array of company objects
+ */
 function renderCompanies(companies = allCompanies) {
     const grid = document.getElementById('companiesGrid');
     grid.innerHTML = '';
@@ -247,6 +355,7 @@ function renderCompanies(companies = allCompanies) {
             bgStyle = `background-image: url("${escapeHtml(company.headerImage)}"); background-size: cover; background-position: center;`;
         }
 
+        // Logo display with image or text fallback
         let logoDisplay = '<div style="width:120px;height:120px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:12px;color:white;font-weight:bold;">Logo</div>';
         if (isSafeImageSource(company.image)) {
             logoDisplay = `<img src="${escapeHtml(company.image)}" alt="${companyName}" style="width:120px;height:120px;object-fit:cover;border-radius:12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">`;
@@ -262,7 +371,7 @@ function renderCompanies(companies = allCompanies) {
                 <p>${(company.products || []).length} Products</p>
             </div>`;
         
-        // Add 3D tilt effect
+        // Add 3D tilt effect for interactivity
         card.addEventListener('mousemove', (e) => handle3DTilt(e, card));
         card.addEventListener('mouseleave', () => reset3DTilt(card));
         card.addEventListener('click', () => showProducts(company.id));
@@ -272,7 +381,13 @@ function renderCompanies(companies = allCompanies) {
     refreshScrollRevealTargets();
 }
 
-// 3D Tilt Effect
+// ==================== 3D CARD EFFECTS ====================
+
+/**
+ * Creates 3D tilt effect on company cards when mouse moves
+ * @param {MouseEvent} e - Mouse event
+ * @param {HTMLElement} card - Card element
+ */
 function handle3DTilt(e, card) {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -292,6 +407,10 @@ function handle3DTilt(e, card) {
     }
 }
 
+/**
+ * Resets the 3D tilt effect when mouse leaves the card
+ * @param {HTMLElement} card - Card element
+ */
 function reset3DTilt(card) {
     card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
     card.style.zIndex = '1';
@@ -303,7 +422,11 @@ function reset3DTilt(card) {
     }
 }
 
-// Product 3D Tilt Effect
+/**
+ * Creates 3D tilt effect on product cards
+ * @param {MouseEvent} e - Mouse event
+ * @param {HTMLElement} card - Card element
+ */
 function handleProduct3DTilt(e, card) {
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -322,6 +445,10 @@ function handleProduct3DTilt(e, card) {
     }
 }
 
+/**
+ * Resets the product card 3D effect
+ * @param {HTMLElement} card - Card element
+ */
 function resetProduct3DTilt(card) {
     card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
     card.style.zIndex = '1';
@@ -332,6 +459,12 @@ function resetProduct3DTilt(card) {
     }
 }
 
+// ==================== PRODUCT VIEW ====================
+
+/**
+ * Displays products for a specific company
+ * @param {number} companyId - Company ID to show products for
+ */
 async function showProducts(companyId) {
     const company = await StorageManager.getCompanyById(companyId);
     if (!company) return;
@@ -343,12 +476,14 @@ async function showProducts(companyId) {
     document.getElementById('productsView').style.display = 'block';
     document.getElementById('productsHeader').style.background = `linear-gradient(135deg, ${company.bgColor}22, ${company.bgColor}11)`;
 
+    // Set company title in header
     const companyHeader = document.getElementById('companyInfoHeader');
     companyHeader.innerHTML = '';
     const companyTitle = document.createElement('h2');
     companyTitle.textContent = company.name || 'Company';
     companyHeader.appendChild(companyTitle);
 
+    // Set background image with blur effect
     const bgEl = document.getElementById('productsBg');
     if (bgEl) {
         if (isSafeImageSource(company.image)) {
@@ -412,11 +547,18 @@ async function showProducts(companyId) {
 }
 
 // ==================== FILTERS ====================
+
+/**
+ * Toggles the filter panel visibility
+ */
 function toggleFilters() {
     const panel = document.getElementById('filterPanel');
     panel.classList.toggle('active');
 }
 
+/**
+ * Initializes the company filter dropdown
+ */
 async function initFilters() {
     const companies = await StorageManager.getCompanies();
     const select = document.getElementById('filterCompany');
@@ -428,6 +570,9 @@ async function initFilters() {
     });
 }
 
+/**
+ * Applies the current filter selections
+ */
 async function applyFilters() {
     const companyId = document.getElementById('filterCompany').value;
     const minPrice = document.getElementById('filterMinPrice').value;
@@ -444,6 +589,9 @@ async function applyFilters() {
     await performFilteredSearch();
 }
 
+/**
+ * Performs the filtered search using the API
+ */
 async function performFilteredSearch() {
     const params = new URLSearchParams();
     if (currentFilters.companyId) params.append('companyId', currentFilters.companyId);
@@ -460,6 +608,10 @@ async function performFilteredSearch() {
     }
 }
 
+/**
+ * Renders filtered products in the grid
+ * @param {Array} products - Array of filtered products
+ */
 function renderFilteredProducts(products) {
     document.getElementById('companyView').style.display = 'block';
     document.getElementById('productsView').style.display = 'none';
@@ -491,6 +643,9 @@ function renderFilteredProducts(products) {
     refreshScrollRevealTargets();
 }
 
+/**
+ * Clears all filters and resets the view
+ */
 function clearFilters() {
     document.getElementById('filterCompany').value = '';
     document.getElementById('filterMinPrice').value = '';
@@ -504,6 +659,11 @@ function clearFilters() {
 }
 
 // ==================== REVIEWS ====================
+
+/**
+ * Loads and displays reviews for a product
+ * @param {number} productId - Product ID
+ */
 async function showProductReviews(productId) {
     const section = document.getElementById('reviewsSection');
     section.innerHTML = '<h3>Reviews</h3><div id="reviewsList" class="reviews-list"></div>';
@@ -516,6 +676,11 @@ async function showProductReviews(productId) {
     }
 }
 
+/**
+ * Renders reviews list and review submission form
+ * @param {Array} reviews - Array of review objects
+ * @param {number} productId - Product ID
+ */
 function renderReviews(reviews, productId) {
     const list = document.getElementById('reviewsList');
     
@@ -539,7 +704,7 @@ function renderReviews(reviews, productId) {
         list.appendChild(item);
     });
     
-    // Add review form
+    // Add review submission form
     const form = document.createElement('div');
     form.className = 'review-form';
     form.innerHTML = `
@@ -557,6 +722,10 @@ function renderReviews(reviews, productId) {
     list.appendChild(form);
 }
 
+/**
+ * Submits a new review for a product
+ * @param {number} productId - Product ID
+ */
 async function submitReview(productId) {
     const rating = document.getElementById('reviewRating').value;
     const comment = document.getElementById('reviewComment').value;

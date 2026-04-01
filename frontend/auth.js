@@ -1,8 +1,27 @@
+/**
+ * Customer Authentication Module
+ * ==============================
+ * Handles all customer-facing authentication and profile management:
+ * - User registration with profile image
+ * - Login/logout functionality
+ * - Profile editing and password management
+ * - Dashboard with order history and statistics
+ * - Password strength validation
+ */
+
 const CustomerAuth = {
+    // Currently logged in user
     currentUser: null,
+    
+    // Base64 encoded images
     registerProfileImage: '',
     editProfileImage: '',
 
+    /**
+     * Escapes HTML special characters for safe display
+     * @param {*} value - Value to escape
+     * @returns {string} - Escaped string
+     */
     escape(value) {
         if (typeof window.escapeHtml === 'function') return window.escapeHtml(value);
         return String(value ?? '')
@@ -13,21 +32,41 @@ const CustomerAuth = {
             .replace(/'/g, '&#39;');
     },
 
+    /**
+     * Formats amount as Nepali Rupees
+     * @param {number} value - Amount to format
+     * @returns {string} - Formatted currency
+     */
     formatAmount(value) {
         if (typeof window.formatNpr === 'function') return window.formatNpr(value);
         return `NPR ${(Number(value) || 0).toLocaleString()}`;
     },
 
+    /**
+     * Validates if a string is a safe image source
+     * @param {string} value - Image source to validate
+     * @returns {boolean} - True if safe
+     */
     isSafeImage(value) {
         if (typeof window.isSafeImageSource === 'function') return window.isSafeImageSource(value);
         const image = String(value || '').trim();
         return image.startsWith('data:image/') || /^https?:\/\//i.test(image);
     },
 
+    /**
+     * Sanitizes value for CSS URL
+     * @param {string} value - Value to sanitize
+     * @returns {string} - Sanitized value
+     */
     toSafeCssUrl(value) {
         return String(value || '').replace(/["'()\\\r\n]/g, '');
     },
 
+    /**
+     * Sets avatar element with user image or fallback
+     * @param {string} elementId - ID of avatar element
+     * @param {Object} customer - Customer object
+     */
     setAvatar(elementId, customer) {
         const avatar = document.getElementById(elementId);
         if (!avatar) return;
@@ -48,6 +87,11 @@ const CustomerAuth = {
         avatar.textContent = fallback;
     },
 
+    /**
+     * Renders profile image preview
+     * @param {string} containerId - ID of preview container
+     * @param {string} imageData - Base64 image data
+     */
     renderImagePreview(containerId, imageData) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -60,6 +104,11 @@ const CustomerAuth = {
         container.innerHTML = `<img src="${this.escape(imageData)}" alt="Profile image preview">`;
     },
 
+    /**
+     * Reads file as data URL
+     * @param {File} file - File to read
+     * @returns {Promise<string>} - Promise resolving to base64 data URL
+     */
     async readImageAsDataUrl(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -69,6 +118,12 @@ const CustomerAuth = {
         });
     },
 
+    /**
+     * Handles image selection and storage
+     * @param {File} file - Selected file
+     * @param {string} targetField - Property name to store image
+     * @param {string} previewId - Preview container ID
+     */
     async handleImageSelection(file, targetField, previewId) {
         if (!file) {
             this[targetField] = '';
@@ -86,6 +141,10 @@ const CustomerAuth = {
         this.renderImagePreview(previewId, dataUrl);
     },
 
+    /**
+     * Handles registration profile image selection
+     * @param {Event} event - Change event
+     */
     async previewRegisterImage(event) {
         try {
             await this.handleImageSelection(event.target.files[0], 'registerProfileImage', 'registerProfilePreview');
@@ -94,6 +153,10 @@ const CustomerAuth = {
         }
     },
 
+    /**
+     * Handles edit profile image selection
+     * @param {Event} event - Change event
+     */
     async previewEditProfileImage(event) {
         try {
             await this.handleImageSelection(event.target.files[0], 'editProfileImage', 'editProfilePreview');
@@ -102,6 +165,9 @@ const CustomerAuth = {
         }
     },
 
+    /**
+     * Clears the edit profile image
+     */
     clearEditProfileImage() {
         this.editProfileImage = '';
         const input = document.getElementById('editProfileImage');
@@ -109,12 +175,20 @@ const CustomerAuth = {
         this.renderImagePreview('editProfilePreview', '');
     },
 
+    // ==================== AUTH MODALS ====================
+
+    /**
+     * Shows the login form in auth modal
+     */
     showLoginModal() {
         document.getElementById('authModal').classList.add('active');
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('registerForm').style.display = 'none';
     },
 
+    /**
+     * Shows the registration form in auth modal
+     */
     showRegisterModal() {
         document.getElementById('authModal').classList.add('active');
         document.getElementById('loginForm').style.display = 'none';
@@ -122,22 +196,34 @@ const CustomerAuth = {
         this.renderImagePreview('registerProfilePreview', this.registerProfileImage);
     },
 
+    /**
+     * Switches to login form
+     */
     switchToLogin() {
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('registerForm').style.display = 'none';
     },
 
+    /**
+     * Switches to registration form
+     */
     switchToRegister() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('registerForm').style.display = 'block';
         this.renderImagePreview('registerProfilePreview', this.registerProfileImage);
     },
 
+    /**
+     * Closes the auth modal and clears forms
+     */
     closeAuthModal() {
         document.getElementById('authModal').classList.remove('active');
         this.clearForms();
     },
 
+    /**
+     * Clears all form fields
+     */
     clearForms() {
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginPassword').value = '';
@@ -155,6 +241,11 @@ const CustomerAuth = {
         this.renderImagePreview('registerProfilePreview', '');
     },
 
+    // ==================== AUTH OPERATIONS ====================
+
+    /**
+     * Authenticates user with email and password
+     */
     async login() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
@@ -185,6 +276,9 @@ const CustomerAuth = {
         }
     },
 
+    /**
+     * Registers a new customer account
+     */
     async register() {
         const name = document.getElementById('registerName').value.trim();
         const email = document.getElementById('registerEmail').value.trim();
@@ -195,6 +289,7 @@ const CustomerAuth = {
         const confirmPassword = document.getElementById('registerConfirmPassword').value;
         const submitBtn = document.querySelector('#registerForm .auth-submit-btn');
 
+        // Validation
         if (!name || !email || !phone || !location || !password || !confirmPassword) {
             showNotification('Please fill all required fields', 'error');
             return;
@@ -242,6 +337,9 @@ const CustomerAuth = {
         }
     },
 
+    /**
+     * Logs out the current user
+     */
     logout() {
         if (!confirm('Are you sure you want to logout?')) return;
         StorageManager.logoutCustomer();
@@ -254,6 +352,12 @@ const CustomerAuth = {
         this.closeDashboard();
     },
 
+    // ==================== UI UPDATES ====================
+
+    /**
+     * Updates UI elements for logged-in user
+     * @param {Object} customer - Customer data
+     */
     updateUIForLoggedInUser(customer) {
         this.currentUser = customer;
         document.getElementById('guestControls').style.display = 'none';
@@ -262,12 +366,16 @@ const CustomerAuth = {
 
         this.setAvatar('userAvatar', customer);
 
+        // Pre-fill checkout form with customer data
         document.getElementById('customerName').value = customer.name || '';
         document.getElementById('customerPhone').value = customer.phone || '';
         document.getElementById('customerLocation').value = customer.location || '';
         document.getElementById('customerPan').value = customer.pan || '';
     },
 
+    /**
+     * Updates UI elements for logged-out user
+     */
     updateUIForLoggedOutUser() {
         document.getElementById('guestControls').style.display = 'flex';
         document.getElementById('userControls').style.display = 'none';
@@ -283,6 +391,11 @@ const CustomerAuth = {
         }
     },
 
+    // ==================== DASHBOARD ====================
+
+    /**
+     * Shows the customer dashboard
+     */
     async showDashboard() {
         const customer = await StorageManager.getCurrentUser();
         if (!customer) {
@@ -293,27 +406,40 @@ const CustomerAuth = {
         await this.loadDashboardData();
     },
 
+    /**
+     * Closes the customer dashboard
+     */
     closeDashboard() {
         document.getElementById('customerDashboard').classList.remove('active');
     },
 
+    /**
+     * Loads and displays dashboard data
+     * Includes profile info, stats, and order history
+     */
     async loadDashboardData() {
         const customer = await StorageManager.getCurrentUser();
         if (!customer) return;
 
+        // Fetch stats and orders
         const stats = await StorageManager.getCustomerStats(customer.customerId);
         const orders = await StorageManager.getOrdersByCustomer(customer.customerId);
 
+        // Update profile display
         document.getElementById('dashboardCustomerName').textContent = customer.name || '-';
         document.getElementById('dashboardCustomerEmail').textContent = customer.email || '-';
         document.getElementById('dashboardCustomerPhone').textContent = customer.phone || '-';
         document.getElementById('dashboardCustomerLocation').textContent = customer.location || '-';
         document.getElementById('dashboardCustomerPan').textContent = customer.pan || 'N/A';
+        
+        // Update statistics
         document.getElementById('dashboardTotalOrders').textContent = stats.totalOrders || 0;
         document.getElementById('dashboardTotalSpent').textContent = this.formatAmount(stats.totalSpent || 0);
         document.getElementById('dashboardAvgOrder').textContent = this.formatAmount(Math.round(stats.averageOrderValue || 0));
+        
         this.setAvatar('dashboardCustomerAvatar', customer);
 
+        // Render order history
         const ordersContainer = document.getElementById('dashboardOrders');
         if (!orders || orders.length === 0) {
             ordersContainer.innerHTML = '<p class="empty-state">No orders yet</p>';
@@ -332,10 +458,27 @@ const CustomerAuth = {
                 }
                 return `<div class="order-item"><span>${itemImage}${itemName}</span><span>${price}</span></div>`;
             }).join('');
-            return `<div class="dashboard-order-card"><div class="order-header"><span class="order-id">Order #${safeOrderId}</span><span class="order-date">${orderDate}</span></div><div class="order-items">${itemsHtml}</div><div class="order-total"><strong>Total:</strong><strong>${this.formatAmount(parseFloat(order.total || 0))}</strong></div></div>`;
+            return `
+                <div class="dashboard-order-card">
+                    <div class="order-header">
+                        <span class="order-id">Order #${safeOrderId}</span>
+                        <span class="order-date">${orderDate}</span>
+                    </div>
+                    <div class="order-items">${itemsHtml}</div>
+                    <div class="order-total">
+                        <strong>Total:</strong>
+                        <strong>${this.formatAmount(parseFloat(order.total || 0))}</strong>
+                    </div>
+                </div>
+            `;
         }).join('');
     },
 
+    // ==================== PROFILE EDITING ====================
+
+    /**
+     * Opens edit profile modal with current data
+     */
     async showEditProfile() {
         const customer = await StorageManager.getCurrentUser();
         if (!customer) return;
@@ -350,10 +493,16 @@ const CustomerAuth = {
         document.getElementById('editProfileModal').classList.add('active');
     },
 
+    /**
+     * Closes edit profile modal
+     */
     closeEditProfile() {
         document.getElementById('editProfileModal').classList.remove('active');
     },
 
+    /**
+     * Saves profile changes
+     */
     async saveProfile() {
         const customer = await StorageManager.getCurrentUser();
         if (!customer) return;
@@ -384,10 +533,18 @@ const CustomerAuth = {
         await this.loadDashboardData();
     },
 
+    // ==================== PASSWORD MANAGEMENT ====================
+
+    /**
+     * Opens change password modal
+     */
     showChangePassword() {
         document.getElementById('changePasswordModal').classList.add('active');
     },
 
+    /**
+     * Closes change password modal and clears fields
+     */
     closeChangePassword() {
         document.getElementById('changePasswordModal').classList.remove('active');
         document.getElementById('oldPassword').value = '';
@@ -395,6 +552,9 @@ const CustomerAuth = {
         document.getElementById('confirmNewPassword').value = '';
     },
 
+    /**
+     * Changes the user's password
+     */
     async changePassword() {
         const customer = await StorageManager.getCurrentUser();
         if (!customer) return;
@@ -425,6 +585,10 @@ const CustomerAuth = {
         }
     },
 
+    /**
+     * Evaluates and displays password strength indicator
+     * @param {string} password - Password to evaluate
+     */
     checkPasswordStrength(password) {
         const strengthFill = document.getElementById('strengthFill');
         const strengthText = document.getElementById('strengthText');
@@ -436,6 +600,7 @@ const CustomerAuth = {
             return;
         }
 
+        // Calculate strength score based on various criteria
         let score = 0;
         if (password.length >= 6) score++;
         if (password.length >= 10) score++;
@@ -459,6 +624,11 @@ const CustomerAuth = {
         strengthFill.className = 'strength-fill ' + (score <= 1 ? 'weak' : score <= 3 ? 'medium' : 'strong');
     },
 
+    // ==================== AUTH STATUS CHECK ====================
+
+    /**
+     * Checks and restores authentication state on page load
+     */
     async checkAuthStatus() {
         if (!StorageManager.isCustomerLoggedIn()) {
             this.updateUIForLoggedOutUser();
